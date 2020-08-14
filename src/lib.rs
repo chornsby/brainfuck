@@ -28,7 +28,7 @@ impl TryFrom<u8> for Command {
             b',' => Ok(Self::ReadInput),
             b'[' => Ok(Self::BeginLoop),
             b']' => Ok(Self::EndLoop),
-            _ => Err("Unknown instruction"),
+            _ => Err("Unknown command"),
         }
     }
 }
