@@ -1,37 +1,9 @@
 use std::collections::HashMap;
 use std::convert::{TryFrom, TryInto};
 
-/// One of the eight commands of the Brainfuck language
-#[derive(Debug)]
-enum Command {
-    StepForward,
-    StepBackward,
-    Increment,
-    Decrement,
-    PrintOutput,
-    ReadInput,
-    BeginLoop,
-    EndLoop,
-}
+use crate::command::Command;
 
-impl TryFrom<u8> for Command {
-    type Error = &'static str;
-
-    /// Tries to convert a byte into a known Command
-    fn try_from(value: u8) -> Result<Self, Self::Error> {
-        match value {
-            b'>' => Ok(Self::StepForward),
-            b'<' => Ok(Self::StepBackward),
-            b'+' => Ok(Self::Increment),
-            b'-' => Ok(Self::Decrement),
-            b'.' => Ok(Self::PrintOutput),
-            b',' => Ok(Self::ReadInput),
-            b'[' => Ok(Self::BeginLoop),
-            b']' => Ok(Self::EndLoop),
-            _ => Err("Unknown command"),
-        }
-    }
-}
+mod command;
 
 /// A list of bytes parsed into a Brainfuck program
 ///
