@@ -1,6 +1,11 @@
-use brainfuck::program::Program;
-use brainfuck::Interpreter;
+mod command;
+mod interpreter;
+mod program;
+
 use std::convert::TryFrom;
+
+use interpreter::Interpreter;
+use program::Program;
 
 fn main() {
     let path = std::env::args().nth(1).expect("Missing filename");

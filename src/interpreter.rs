@@ -1,8 +1,5 @@
-pub mod command;
-pub mod program;
-
-use command::Command;
-use program::Program;
+use crate::command::Command;
+use crate::program::Program;
 
 pub struct Interpreter {
     memory: [u8; 30_000],
