@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::convert::{TryFrom, TryInto};
+use std::convert::TryFrom;
 
 use crate::command::Command;
 
@@ -16,19 +16,19 @@ impl TryFrom<&[u8]> for Program {
     type Error = &'static str;
 
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-        let commands: Vec<Command> = value
+        let mut commands: Vec<Command> = vec![];
+        let mut loop_stack: Vec<usize> = vec![];
+        let mut loop_map: HashMap<usize, usize> = Default::default();
+
+        for (index, command) in value
             .iter()
-            .filter_map(|&byte| byte.try_into().ok())
-            .collect();
-
-        let mut loop_map: HashMap<usize, usize> = HashMap::new();
-        let mut stack: Vec<usize> = vec![];
-
-        for (index, command) in commands.iter().enumerate() {
+            .flat_map(|&byte| Command::try_from(byte).ok())
+            .enumerate()
+        {
             match command {
-                Command::BeginLoop => stack.push(index),
+                Command::BeginLoop => loop_stack.push(index),
                 Command::EndLoop => {
-                    let start = stack.pop().ok_or("Unmatched ]")?;
+                    let start = loop_stack.pop().ok_or("Unmatched ]")?;
                     let end = index;
 
                     loop_map.insert(start, end);
@@ -36,9 +36,11 @@ impl TryFrom<&[u8]> for Program {
                 }
                 _ => {}
             }
+
+            commands.push(command);
         }
 
-        if stack.is_empty() {
+        if loop_stack.is_empty() {
             Ok(Self { commands, loop_map })
         } else {
             Err("Unmatched [")
