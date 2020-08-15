@@ -44,3 +44,9 @@ impl Interpreter {
         }
     }
 }
+
+impl Default for Interpreter {
+    fn default() -> Self {
+        Interpreter::new()
+    }
+}
