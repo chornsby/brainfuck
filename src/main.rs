@@ -1,4 +1,5 @@
-use brainfuck::{Interpreter, Program};
+use brainfuck::program::Program;
+use brainfuck::Interpreter;
 use std::convert::TryFrom;
 
 fn main() {
